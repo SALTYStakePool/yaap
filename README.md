@@ -12,7 +12,7 @@ We recieved a question on reddit which made us think - _what would a novice deve
 
 ## Getting Started
 
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
+The following instructions will help you deploy the Plutus Playground to an AWS EC2 instance in your account where you can start tinkering. Estimated time to deploy is around half an hour.
 
 
 ### Prerequisites
@@ -24,12 +24,18 @@ These instructions will get you a copy of the project up and running on your loc
 
 ### Estimated Costs
 
-**Overall**: $60 
+**Overall daily**: $2 
 
 **Breakdown**:
 - Assuming use of N. Virginia (`us-east-1`)
-- `t3a.large` instance, 740 hours/month at $0.0752/hour = $55.7
-- 30GB of `gp2` volume at $0.10/GB = $3
+- `t3a.large` instance at $0.0752/hour = $1.8
+- 30GB of `gp2` volume at $0.10/GB = $0.1
+
+#### Keeping Costs Down
+
+One benefit with cloud is that you can turn off your instances (virtual machines) to minimize costs to only those relating to storage. Once you need the playground again, simply turn the instance on and play.
+
+**TODO** steps for that
 
 
 ## Deployment

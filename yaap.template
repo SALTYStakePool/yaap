@@ -18,7 +18,7 @@ Metadata:
       pLatestAmiId: 
         default: "Image"
       pKeyPair: 
-        default: "SSH KeyPair"
+        default: "KeyPair"
       pInstanceType: 
         default: "Instance Type"
       pAccessCidr: 
@@ -38,7 +38,7 @@ Parameters:
     Description: "Instance type to be used"
     Type: "String"
   pAccessCidr:
-    AllowedPattern: "^(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})/(\d{1,2})$"
+    AllowedPattern: "^(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})/(\\d{1,2})$"
     Default: "0.0.0.0/0"
     Description: "IP range to allow access, please apply caution"
     Type: "String"
@@ -60,16 +60,17 @@ Resources:
                 # Dependencies et al
                 sudo yum install -y gmp-devel ncurses-compat-libs libtool ncurses-devel
                 sudo amazon-linux-extras install -y R4
-                sudo chown -R ec2-user /nix
-                sudo mkdir /opt/plutus
-                sudo chown ec2-user:ec2-user /opt/plutus
 
                 # Setup NiX
+                sudo chown -R ec2-user /nix
                 bash <(curl -L https://nixos.org/nix/install)
                 nix-env -iA cachix -f https://cachix.org/api/v1/install
                 . /home/ec2-user/.nix-profile/etc/profile.d/nix.sh
                 cachix use iohk
 
+                # Plutus
+                sudo mkdir /opt/plutus
+                sudo chown ec2-user:ec2-user /opt/plutus
                 cd /opt
                 git clone https://github.com/input-output-hk/plutus.git
 
@@ -78,21 +79,25 @@ Resources:
                 echo "substituters        = https://hydra.iohk.io https://iohk.cachix.org https://cache.nixos.org/" >> ~/.config/nix/nix.conf
                 echo "trusted-public-keys = hydra.iohk.io:f/Ea+s+dFdN+3Y/G+FDgSq+a5NEWhJGzdjvKNGv0/EQ= iohk.cachix.org-1:DpRUyj7h7V830dp/i6Nti+NEO2/nhblbov/8MW7Rqoo= cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY=" >> ~/.config/nix/nix.conf
 
+                # Time to build
                 cd /opt/plutus
                 nix build -f default.nix plutus.haskell.packages.plutus-core.components.library
-                nix-build -A plutus-playground.generate-purescript
-                # nix-build -A plutus-playground.client
                 nix-build -A plutus-playground.server # Allows us to just run later
 
-                # Modifying WebPack to make it publicly accessible
+                # Modifying WebPack to make it publicly accessible and not fully required but private IP rather than localhost
+                MY_IP=$(curl --silent -q http://169.254.169.254/latest/meta-data/local-ipv4)
                 sed -i 's/https: true,/https: false,\n        host: "0.0.0.0",/' /opt/plutus/plutus-playground-client/webpack.config.js
-                sed -i 's/localhost/${rEC2Plutus.PublicIp}/' /opt/plutus/plutus-playground-client/default.nix
+                sed -i 's/localhost/'$MY_IP'/' /opt/plutus/plutus-playground-client/default.nix
 
                 # Start time
                 cd /opt/plutus/
-                $(nix-build -A plutus-playground.server)/bin/plutus-playground-server webserver &
-                nix-shell --run "cd /opt/plutus/plutus-playground-client/ && npm run start &"
+                export WEBGHC_URL=http://$MY_IP:8080
+                export LC_ALL=C
+                export LANG=en_US.UTF-8
 
+                nix-shell --run "cd /opt/plutus/plutus-playground-client/ && plutus-playground-server webserver &"
+                nix-shell --run "cd /opt/plutus/plutus-playground-client/ && npm run start &"
+                
                 # Report
                 /opt/aws/bin/cfn-signal -e $? --stack ${AWS::StackName} --resource rEC2Plutus --region ${AWS::Region}
 
