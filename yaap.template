@@ -30,6 +30,7 @@ Parameters:
     Description: "Base image to be used (if unsure, stick with the default)"
     Type: "AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>"
   pKeyPair:
+    Default: ""
     Description: "SSH Key Pair for access to the instance, if required"
     Type: "AWS::EC2::KeyPair::KeyName"
   pInstanceType:
@@ -42,6 +43,9 @@ Parameters:
     Default: "0.0.0.0/0"
     Description: "IP range to allow access, please apply caution"
     Type: "String"
+
+Conditions:
+  cKeyProvided: !Equals [!Ref pKeyPair, ""]
 
 Resources:
   rEC2Plutus: 
@@ -110,7 +114,7 @@ Resources:
     Properties: 
       ImageId: !Ref pLatestAmiId
       InstanceType: !Ref pInstanceType
-      KeyName: !Ref pKeyPair
+      KeyName: !If [ cKeyProvided, !Ref pKeyPair, !Ref "AWS::NoValue" ]
       BlockDeviceMappings:
         - DeviceName: /dev/xvda
           Ebs:

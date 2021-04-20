@@ -17,10 +17,9 @@ The following instructions will help you deploy the Plutus Playground to an AWS 
 
 ### Prerequisites
 
-- An AWS Account
+- An AWS Account - follow the [steps](https://aws.amazon.com/premiumsupport/knowledge-center/create-and-activate-aws-account/) from Amazon on this
 - Keen interest in the platform
 - [Optional] basic familiarity with AWS and/or Linux
-
 
 ### Estimated Costs
 
@@ -29,18 +28,51 @@ The following instructions will help you deploy the Plutus Playground to an AWS 
 **Breakdown**:
 - Assuming use of N. Virginia (`us-east-1`)
 - `t3a.large` instance at $0.0752/hour = $1.8
-- 30GB of `gp2` volume at $0.10/GB = $0.1
+- 30GB of `gp2` volume at $0.10/GB/month = $0.1
 
-#### Keeping Costs Down
-
-One benefit with cloud is that you can turn off your instances (virtual machines) to minimize costs to only those relating to storage. Once you need the playground again, simply turn the instance on and play.
-
-**TODO** steps for that
+See the section _Keeping Costs Down_ further down on how to save costs when your deployment isn't in use (cut down costs to just those of storage).
 
 
 ## Deployment
 
+The deployment is fully automated using Infrastructure-as-Code (AWS CloudFormation).
+
+- Click
+[![Launch Stack](https://s3.amazonaws.com/cloudformation-examples/cloudformation-launch-stack.png "Launch Stack")](https://console.aws.amazon.com/cloudformation/home?#/stacks/create/review?templateURL=https://saltypool.s3-eu-west-1.amazonaws.com/yaap.template&stackName=YAAP)
+- Take note of the region in which you're deploying (top right hand corner of the AWS Console)
+- The following parameters are required:
+  - Stack name: a friendly name for this deployment, you can keep with the default (YAAP) or tweak as you wish
+  - Instance Type: what size or type of Instance (VM)
+    - We've included a set of more cost-efficient types (the `t3a` family), which are part of the general purpose family
+    - Detailed cost information is available on the [AWS pages]
+  - Key Pair:
+    - This private and public key pair is used to connect to the Linux instance running Plutus, while it isn't required, you may want to connect to the "box" at some point (curiosity, patching etc.)
+    - Put the Key Pair name you'd like to use in this field
+    - More information is available on the [AWS documentation](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-key-pairs.html)
+    - If unsure, keep it empty, this means you won't be able to connect via SSH ("terminal") **yet you will be able to use Plutus**
+  - Image: keep the default, this will use the latest Amazon Linux machine image
+  - Access: this field will define what IP range can access your Plutus deployment web-interface and machine
+    - `0.0.0.0/0` means "anywhere" and we **strongly** recommend you change this
+    - Use [this link](http://checkip.amazonaws.com/) to find your IP address and add a `/32` to the end of it
+      - So say your IP address is `12.34.56.78`, put `12.34.56.78/32` as the value
+- Click "Create stack"
+- Within approximately 15 minutes the deployment will complete
+
+
 **TODO**: insert step by step including Launch Stack link including explanation of parameters
+
+
+### Keeping Costs Down
+
+One benefit with cloud is that you can turn off your instances (virtual machines) to minimize costs to only those relating to storage. Once you need the playground again, simply turn the instance on and play.
+
+To stop the instance:
+- Navigate to the [EC2 Console](https://console.aws.amazon.com/ec2/home), remember to verify your region in the upper right hand corner!
+- Select your _"PlutusPlayground"_ Instance
+- Click the "Instance state" button and select "Stop instance"
+
+To start it again simply follow the same steps but choose "Start instance".
+
 
 ## Acknowledgments
 
