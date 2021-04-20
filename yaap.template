@@ -36,7 +36,7 @@ Parameters:
     Type: String
   pInstanceType:
     AllowedValues: ["t3a.small", "t3a.medium", "t3a.large", "t3.small", "t3.medium", "t3.large", "c5a.large"]
-    Default: "t3a.large"
+    Default: "t3a.medium"
     Description: "Instance type to be used"
     Type: "String"
   pAccessCidr:
