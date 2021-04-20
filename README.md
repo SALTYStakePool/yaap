@@ -66,9 +66,6 @@ The deployment is fully automated using Infrastructure-as-Code (AWS CloudFormati
 ![Deployment Complete](images/YAAP-CloudFormation-Outputs.png "Deployment Complete")
 
 
-**TODO**: insert step by step including Launch Stack link including explanation of parameters
-
-
 ### Keeping Costs Down
 
 One benefit with cloud is that you can turn off your instances (virtual machines) to minimize costs to only those relating to storage. Once you need the playground again, simply turn the instance on and play.
@@ -79,6 +76,15 @@ To stop the instance:
 - Click the "Instance state" button and select "Stop instance"
 
 To start it again simply follow the same steps but choose "Start instance".
+
+
+### Cleanup
+
+So, you're done with your deployment and want to clean it up? easy! just please make sure you've either backed up your work or are happy to delete it along with the resources.
+
+- Simply navigate to the [CloudFormation Console](https://console.aws.amazon.com/cloudformation/home), ensure you're in the region where you originally deployed YAAP (the selector in the top right-hand side of the AWS Console)
+- Choose your Stack, if you stuck with our default name, it'll be _"YAAP"_
+- Finally, press the "Delete" button and confirm your decision to delete the deployment
 
 
 ## Acknowledgments
