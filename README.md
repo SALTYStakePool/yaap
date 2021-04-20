@@ -23,11 +23,11 @@ The following instructions will help you deploy the Plutus Playground to an AWS 
 
 ### Estimated Costs
 
-**Overall daily**: $2 
+**Overall daily**: $1 
 
 **Breakdown**:
 - Assuming use of N. Virginia (`us-east-1`)
-- `t3a.large` instance at $0.0752/hour = $1.8
+- `t3a.medium` instance at $0.0376/hour = $0.9
 - 30GB of `gp2` volume at $0.10/GB/month = $0.1
 
 See the section _Keeping Costs Down_ further down on how to save costs when your deployment isn't in use (cut down costs to just those of storage).
@@ -57,6 +57,13 @@ The deployment is fully automated using Infrastructure-as-Code (AWS CloudFormati
       - So say your IP address is `12.34.56.78`, put `12.34.56.78/32` as the value
 - Click "Create stack"
 - Within approximately 15 minutes the deployment will complete
+  - Go grab a coffee/tea/drink while it runs and check back in a bit
+  - How do you know it's done? the "Status" of your Stack will become _"CREATE_COMPLETE"_
+  - Click the "Outputs" tab to get the address of your new environment (see image below)
+  - It may take an extra minute or two for the address to load, this is because of the background startup occuring so don't be alarmed and add one drop of patience
+- _Et voila!_ you're ready to start playing, tinkering and learning!
+
+![Deployment Complete](images/YAAP-CloudFormation-Outputs.png "Deployment Complete")
 
 
 **TODO**: insert step by step including Launch Stack link including explanation of parameters
