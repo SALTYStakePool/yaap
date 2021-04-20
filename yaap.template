@@ -32,7 +32,8 @@ Parameters:
   pKeyPair:
     Default: ""
     Description: "SSH Key Pair for access to the instance, if required"
-    Type: "AWS::EC2::KeyPair::KeyName"
+    # Can't use AWS type with empty value Type: "AWS::EC2::KeyPair::KeyName"
+    Type: String
   pInstanceType:
     AllowedValues: ["t3a.small", "t3a.medium", "t3a.large", "t3.small", "t3.medium", "t3.large", "c5a.large"]
     Default: "t3a.large"
