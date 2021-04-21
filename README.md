@@ -7,7 +7,7 @@ Brought to you by [SALTY](https://saltypool.net/) stakepool, the smart choice in
 
 ## Why?
 
-We recieved a question on reddit which made us think - _what would a novice developer wanting to dabble with Plutus need for a minimal setup?_. YAAP isn't aimed to replace the official Plutus [deployment](https://github.com/input-output-hk/plutus/tree/master/deployment) but rather to provide an accessible (and inexpensive) way of setting up a personal instance. Our estimate is that the cost of YAAP vs. a full-official deployment is 1/8.
+We recieved a question on reddit which made us think - _what would a novice developer wanting to dabble with Plutus need for a minimal setup?_. YAAP isn't aimed to replace the official Plutus [deployment](https://github.com/input-output-hk/plutus/tree/master/deployment) but rather to provide an accessible (and inexpensive) way of setting up a personal instance. Our estimate is that the cost of YAAP vs. a standard deployment is less than an 1/8.
 
 
 ## Getting Started
